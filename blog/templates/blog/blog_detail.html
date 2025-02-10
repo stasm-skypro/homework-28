@@ -1,0 +1,39 @@
+<!-- blog_detail.html -->
+{% extends 'base.html' %}
+{% block title %}
+  Блог
+{% endblock %}
+{% block content %}
+  {% include 'header.html' %}
+  {% include 'navbar.html' %}
+
+  <div class="container text-start col-10">
+    <div class="container-lg-fluid mt-5">
+      <div class="container-fluid text-black">
+        <h4 class="mb-4 text-opacity-75 fw-bold">{{ object.title }}</h4>
+        <div class="row">
+          <div class="col">
+            <p style="color: #adb5bd; font-size: 0.9em;">Дата создания: {{ blog.created_at|date:'d.m.Y' }}</p>
+          </div>
+          <div class="col">
+            <p style="color: #adb5bd;font-size: 0.9em;">Количество просмотров: {{ blog.views_counter }}</p>
+          </div>
+        </div>
+        <div class="justify-content-start">
+          {% if blog.preview %}
+            <img src="{{ blog.preview.url }}" alt="{{ blog.preview }}" style="max-width: 800px;"/>
+          {% else %}
+            <img src="/media/blog/blog_default.png" alt="{{ blog.preview }}" style="max-width: 800px;"/>
+          {% endif %}
+        </div>
+        <br/>
+      </div>
+      <p>{{ object.content }}</p>
+      <br/>
+      <div class="btn-group">
+        <a href="{% url 'blog:blog_list' %}" class="btn btn-secondary">Вернуться</a>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

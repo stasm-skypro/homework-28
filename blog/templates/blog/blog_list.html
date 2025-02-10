@@ -1,0 +1,84 @@
+<!-- blog_list.html -->
+{% extends 'base.html' %}
+{% block title %}
+Skystore
+{% endblock %}
+{% block content %}
+{% include 'header.html' %}
+{% include 'navbar.html' %}
+
+<!-- Заголовок страницы -->
+<div class="pricing-header px-3 py-3 pt-md-1 pb-md-4 mx-auto text-center">
+  <div class="row">
+    <div class="col-10">
+      <p class="text-start" style="font-size: 1.2em;">Отличный вариант поделиться впечатлениями о товаре или
+        работе сервиса</p>
+    </div>
+    <div class="col-2">
+      {% if user.is_authenticated %}
+      <a href="{% url 'blog:blog_create' %}" class="p-2 btn btn-secondary-link" style="color: #34373a">Добавить
+        статью</a>
+      {% else %}
+      <a href="#" class="p-2 btn btn-secondary-link" style="color: #adb5bd">Добавить
+        статью</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Контейнер содержащий карточки блогов -->
+<div class="container-fluid col-8 justify-content-left">
+  {% for blog in blog_list %}
+  <div class="row">
+    <div class="card-header" style="padding: 0px;">
+      <div class="container col-12">
+        {% if blog.preview %}
+        <img src="{{ blog.preview.url }}" alt="{{ blog.preview }}" style="max-width: 800px;" />
+        {% else %}
+        <img src="/media/blog/blog_default.png" alt="{{ blog.preview }}" style="max-width: 800px;" />
+        {% endif %}
+      </div>
+      <br />
+      <div class="container text-start col-12">
+        <h4 class="my-0 font-weight-normal text-black text-opacity-75 fw-bold">{{ blog.title }}</h4>
+        <br />
+        <p class="card-text">{{ blog.content|truncatechars:150 }}</p>
+      </div>
+      <br />
+      <div class="container text-start col-12">
+        <div class="row">
+          <div class="col-3">
+            <p style="color: #adb5bd; font-size: 0.9em;">Дата создания: {{ blog.created_at|date:'d.m.Y' }}</p>
+          </div>
+          <div class="col-4">
+            <p style="color: #adb5bd;font-size: 0.9em;">Количество просмотров: {{ blog.views_counter }}</p>
+          </div>
+          <div class="col-4">
+            {% if user.is_authenticated %}
+            <div class="btn-group">
+              <a href="{% url 'blog:blog_detail' blog.pk %}" class="p-2 btn btn-dark-link" role="button"
+                style="color: #34373a;">Подробнее</a>
+              <a href="{% url 'blog:blog_create' blog.pk %}" class="p-2 btn btn-dark-link" role="button"
+                style="color: #34373a;">Редактировать</a>
+              <a href="{% url 'blog:blog_confirm_delete' blog.pk %}" class="p-2 btn btn-dark-link" role="button"
+                style="color: #34373a;">Удалить</a>
+            </div>
+            {% else %}
+            <div class="btn-group">
+              <a href="#" class="p-2 btn btn-secondary-link" role="button" style="color: #adb5bd;">Подробнее</a>
+              <a href="#" class="p-2 btn btn-secondary-link" role="button" style="color: #adb5bd;">Редактировать</a>
+              <a href="#" class="p-2 btn btn-secondary-link" role="button" style="color: #adb5bd;">Удалить</a>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <br />
+  <br />
+  {% endfor %}
+</div>
+<!--  -->
+{% endblock %}

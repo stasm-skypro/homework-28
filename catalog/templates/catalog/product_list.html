@@ -1,0 +1,88 @@
+<!-- product_list.html -->
+{% extends 'base.html' %}
+{% block title %}
+Skystore
+{% endblock %}
+{% block content %}
+{% include 'header.html' %}
+{% include 'navbar.html' %}
+
+<!-- Заголовок страницы -->
+<div class="pricing-header px-3 py-3 pt-md-1 pb-md-4 mx-auto text-center">
+  <div class="row">
+    <div class="col-8">
+      <p class="text-start" style="font-size: 1.2em;">Отличный вариант что-то купить или что-то продать</p>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="col-2">
+      <a class="p-2 btn btn-secondary-link" style="color: #34373a" href="{% url 'catalog:category_create' %}">Добавить
+        категорию</a>
+    </div>
+    <div class="col-2">
+      <a class="p-2 btn btn-secondary-link" style="color: #34373a" href="{% url 'catalog:product_create' %}">Добавить
+        товар</a>
+    </div>
+    {% else %}
+    <div class="col-2">
+      <a href="#" class="p-2 btn btn-secondary-link" style="color: #adb5bd">Добавить категорию</a>
+    </div>
+    <div class="col-2">
+      <a href="#" class="p-2 btn btn-secondary-link" style="color: #adb5bd">Добавить товар</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Контейнер содержащий карточки товаров -->
+<div class="container text-center">
+  <div class="row">
+    {% for product in product_list %}
+    <div class="col-4 justify-center">
+      <!-- Карточка товара -->
+      <div class="card-header"
+        style="background-color: #f8f9fa; padding: 5px; border-radius: 5px; box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);">
+        <div class="justify-content-center">
+          {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.product }}" style="max-height: 200px;" />
+          {% else %}
+          <img src="/media/catalog/skystore_default.jpg" alt="{{ product.product }}" style="max-height: 200px;" />
+          {% endif %}
+        </div>
+        <hr style="border: none; height: 2px; background-color: #000;">
+        <h5 class="my-0 font-weight-normal text-black text-opacity-75 fw-bold">{{ product.product|truncatechars:30 }}
+        </h5>
+        <ul class="list-group-horizontal-sm mt-3 mb-4 text-start m-3">
+          <li class="fw-bold" style="font-size: 0.9em;">{{ product.description|truncatechars:30 }}</li>
+          <li style="font-size: 0.9em;">Категория: {{ product.category.name }}</li>
+          <li style="font-size: 0.9em;">Дата производства: {{ product.created_at|date:'d.m.Y' }}</li>
+
+          <li>Количество просмотров: {{ product.views_counter }}</li>
+        </ul>
+        <h5 class="my-0 font-weight-normal text-black text-opacity-75 fw-bold">{{ product.price }} руб</h5>
+        <br />
+        {% if user.is_authenticated %}
+        <div class="btn-group">
+          <a href="{% url 'catalog:product_detail' product.pk %}" class="p-2 btn btn-dark-link" role="button"
+            style="color: #34373a;">Подробнее</a>
+          <a href="{% url 'catalog:product_update' product.pk %}" class="p-2 btn btn-dark-link" role="button"
+            style="color: #34373a;">Редактировать</a>
+          <a href="{% url 'catalog:product_delete' product.pk %}" class="p-2 btn btn-dark-link" role="button"
+            style="color: #34373a;">Удалить</a>
+        </div>
+        {% else %}
+        <div class="btn-group">
+          <a href="#" class="p-2 btn btn-secondary-link" role="button" style="color: #adb5bd;">Подробнее</a>
+          <a href="#" class="p-2 btn btn-secondary-link" role="button" style="color: #adb5bd;">Редактировать</a>
+          <a href="#" class="p-2 btn btn-secondary-link" role="button" style="color: #adb5bd;">Удалить</a>
+        </div>
+        {% endif %}
+      </div>
+      <br />
+      <!--  -->
+    </div>
+    {% endfor %}
+  </div>
+  <br />
+</div>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+<!-- product_confirm_delete.html -->
+{% extends 'base.html' %} {% block title %} Skystore - удалить товар {% endblock %} {% block content %} {% include
+'header.html' %} {% include 'navbar.html' %}
+<div class="container">
+    <div class="row" style="align-items: center; justify-content: center">
+        <div class="col-6">
+            <form class="row" method="post" enctype="multipart/form-data">
+                <div class="card">
+                    <div class="card-body">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.product }}" style="max-width: 400px" />
+                        {% else %}
+                        <img src="/media/blog/blog_default.png" alt="{{ product.product }}" style="max-width: 400px" />
+                        {% endif %}
+                        <h2>{{ product.product }}</h2>
+                        <h2>Удалить карточку товара?</h2>
+                        {% csrf_token %}
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                        <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary">Отменить</a>
+                    </div>
+                    <br />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+SECRET_KEY1=******
+DEBUG=****
+NAME=****
+USER=****
+PASSWORD=****
+HOST=****
+PORT=****
+SMTP_LOGIN=****
+SMTP_PASSWORD=****

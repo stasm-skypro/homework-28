@@ -1,0 +1,36 @@
+<!-- product_detail.html -->
+{% extends 'base.html' %}
+{% block title %}
+  Skystore
+{% endblock %}
+{% block content %}
+  {% include 'header.html' %}
+  {% include 'navbar.html' %}
+
+  <div class="container col-8">
+    <div class="container-lg-fluid mt-5 text-center"
+         style="background-color: #f8f9fa; padding: 10px; border-radius: 10px;">
+      <div class="container-fluid">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.product }}" style="max-height: 200px;"/>
+        {% else %}
+          <img src="/media/catalog/skystore_default.jpg" alt="{{ product.product }}" style="max-height: 200px;"/>
+        {% endif %}
+      </div>
+      <div class="container-lg-fluid text-body-secondary">
+        <br/>
+        <h5 class="my-0 font-weight-normal text-black text-opacity-75 fw-bold">{{ product.product }}</h5>
+        <p class="fw-bold" style="font-size: 0.9em;">{{ product.description }}</p>
+        <p style="font-size: 0.9em;">Цена: {{ product.price }} руб</p>
+        <p style="font-size: 0.9em;">Дата производства: {{ product.created_at|date:'d.m.Y' }}</p>
+        <p style="font-size: 0.9em;">Категория: {{ product.category.name }} - {{ product.category.description }}</p>
+        <p style="font-size: 0.9em;">Количество просмотров: {{ product.views_counter }}</p>
+        <br/>
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary">Добавить в корзину</button>
+          <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary">Вернуться</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,37 @@
+<!-- blog_confirm_delete.html -->
+{% extends 'base.html' %}
+{% block title %}
+  Блог
+{% endblock %}
+{% block content %}
+  {% include 'header.html' %}
+  {% include 'navbar.html' %}
+
+  <div class="container">
+    <div class="row" style="align-items: center; justify-content: center;">
+      <div class="col-8">
+        <form class="row" method="post" enctype="multipart/form-data">
+          <div class="card">
+            <div class="card-body">
+              {% if blog.preview %}
+                <img src="{{ blog.preview.url }}" alt="{{ blog.title }}" style="max-width: 800px;"/>
+              {% else %}
+                <img src="/media/blog/blog_default.png" alt="{{ blog.title }}" style="max-width: 800px;"/>
+              {% endif %}
+              <h4>{{ blog.title }}</h4>
+              <br/>
+              <h4>Удалить статью?</h4>
+              {% csrf_token %}
+            </div>
+            <div class="btn-group" style="width: 50%">
+              <button type="submit" class="btn btn-danger">Удалить</button>
+              <a href="{% url 'blog:blog_list' %}" class="btn btn-secondary">Отменить</a>
+            </div>
+            <br/>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
