@@ -34,10 +34,19 @@ class Product(models.Model):
     created_at = models.DateField(verbose_name="Дата производства")
     changed_at = models.DateField(verbose_name="Дата последнего изменения")
     views_counter = models.PositiveIntegerField(default=0, verbose_name="Количество просмотров")
+    publicated = models.BooleanField(default=False, verbose_name="Признак публикации")
 
     def __repl__(self) -> str:
         """Строковое представление для разработчиков."""
-        return "%s %s %s %s %s" % (self.__class__, self.product, self.category, self.price, self.created_at)
+        return "%s %s %s %s %s %s %s" % (
+            self.__class__,
+            self.product,
+            self.category,
+            self.price,
+            self.created_at,
+            self.publicated,
+            self.views_counter,
+        )
 
     def __str__(self) -> str:
         """Общее строковое представление."""
@@ -49,6 +58,9 @@ class Product(models.Model):
         ordering = [
             "product",
             "price",
+        ]
+        permissions = [
+            ("can_unpublish_product", "Can unpublish product"),
         ]
 
 
