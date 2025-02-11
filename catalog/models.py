@@ -35,6 +35,7 @@ class Product(models.Model):
     changed_at = models.DateField(verbose_name="Дата последнего изменения")
     views_counter = models.PositiveIntegerField(default=0, verbose_name="Количество просмотров")
     publicated = models.BooleanField(default=False, verbose_name="Признак публикации")
+    owner = models.ForeignKey("users.CustomUser", on_delete=models.CASCADE, related_name="goods", default=1)
 
     def __repl__(self) -> str:
 

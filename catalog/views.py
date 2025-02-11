@@ -99,7 +99,8 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Дополнительная обработка перед сохранением формы."""
         self.object = form.save()  # Сохраняем объект формы в базу
-        logger.info("Продукт '%s' успешно создан." % self.object.product)
+        form.instance.owner = self.request.user  # Назначаем владельца
+        logger.info("Продукт '%s' успешно создан. Владелец продукта %s." % (self.object.product, self.request.user))
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -126,13 +127,6 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         logger.warning("Ошибка при обновлении продукта: %s" % form.errors)
         return super().form_invalid(form)
 
-    # def get_form_class(self):
-    #     """Переопределение метода get_form для указания формы для модели."""
-    #     user = self.request.user
-    #
-    #     if user.is_authenticated and user.has_perm("catalog.can_unpublish_product"):
-    #         return ProductModeratorForm
-    #     return ProductForm
     def get_form(self, form_class=None):
         """Определяем, какую форму использовать и блокируем поле published при необходимости."""
 

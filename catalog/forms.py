@@ -58,6 +58,7 @@ class ProductForm(StyledFormMixin, forms.ModelForm):
     class Meta:
         model = Product
         fields = "__all__"
+        exclude = ["owner"]  # Исключаем owner, потому что поле заполняется автоматически.
         labels = {
             "name": "Название",
             "description": "Описание",
