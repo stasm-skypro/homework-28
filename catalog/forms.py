@@ -67,6 +67,7 @@ class ProductForm(StyledFormMixin, forms.ModelForm):
             "created_at": "Дата производства",
             "changed_at": "Дата последнего изменения",
             "views_counter": "Количество просмотров",
+            "publicated": "Признак публикации",
         }
 
     def clean_price(self):
@@ -129,7 +130,7 @@ class ProductForm(StyledFormMixin, forms.ModelForm):
 
 
 class ProductModeratorForm(StyledFormMixin, forms.ModelForm):
-    """Класс для модерирования даннных о подукте."""
+    """Класс для модерации данных о продукте."""
 
     class Meta:
         model = Product

@@ -126,12 +126,25 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         logger.warning("Ошибка при обновлении продукта: %s" % form.errors)
         return super().form_invalid(form)
 
-    def get_form(self):
-        """Переопределение метода get_form для указания формы для модели."""
-        user = self.request.user
-        if user.is_authenticated and user.has_perm("catalog.can_unpublish_product"):
-            return ProductModeratorForm
-        return ProductForm
+    # def get_form_class(self):
+    #     """Переопределение метода get_form для указания формы для модели."""
+    #     user = self.request.user
+    #
+    #     if user.is_authenticated and user.has_perm("catalog.can_unpublish_product"):
+    #         return ProductModeratorForm
+    #     return ProductForm
+    def get_form(self, form_class=None):
+        """Определяем, какую форму использовать и блокируем поле published при необходимости."""
+
+        if form_class is None:
+            form_class = ProductForm  # Всегда используем стандартную форму
+
+        form = super().get_form(form_class)
+        if not self.request.user.has_perm("catalog.can_unpublish_product"):
+            form.fields["publicated"].disabled = True
+        return form
+
+
 
 
 class ProductDeleteView(LoginRequiredMixin, DeleteView):

@@ -37,6 +37,7 @@ class Product(models.Model):
     publicated = models.BooleanField(default=False, verbose_name="Признак публикации")
 
     def __repl__(self) -> str:
+
         """Строковое представление для разработчиков."""
         return "%s %s %s %s %s %s %s" % (
             self.__class__,

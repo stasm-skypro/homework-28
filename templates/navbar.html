@@ -12,10 +12,12 @@
             {% csrf_token %}
             <a href="{% url 'users:logout' %}" class="p-2 btn btn-secondary-link"
                 style="color: #34373a; font-size: 0.9rem;">Выйти</a>
-            <a href="{% url 'users:user_update' user.pk %}"">
+            <a href="{% url 'users:user_update' user.pk %}">
                 <img src=" {{ user.avatar.url }}" alt="{{ user.username }}" class="rounded-circle"
                 style="max-width: 18%" />
+
             </a>
+            <p class="fw-bold" style="color: #adb5bd; font-size: 0.9rem;">{{ user.username }}</p>
             {% else %}
             <a href="{% url 'users:register' %}" class="p-2 btn btn-secondary-link"
                 style="color: #34373a; font-size: 0.9rem;">Регистрация</a>
