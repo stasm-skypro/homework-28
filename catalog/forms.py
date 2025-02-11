@@ -126,3 +126,14 @@ class ProductForm(StyledFormMixin, forms.ModelForm):
                 break
 
         return cleaned_data
+
+
+class ProductModeratorForm(StyledFormMixin, forms.ModelForm):
+    """Класс для модерирования даннных о подукте."""
+
+    class Meta:
+        model = Product
+        fields = ["publicated"]
+        labels = {
+            "publicated": "Признак публикации",
+        }

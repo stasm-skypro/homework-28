@@ -16,7 +16,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from dotenv import load_dotenv
 
-from catalog.forms import CategoryForm, ProductForm
+from catalog.forms import CategoryForm, ProductForm, ProductModeratorForm
 from catalog.models import Category, Product
 
 load_dotenv()
@@ -112,7 +112,6 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """Определяет отображение обновления продукта."""
 
     model = Product
-    # fields = "__all__"
     form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
 
@@ -126,6 +125,13 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         """Обработка в случае неверной формы."""
         logger.warning("Ошибка при обновлении продукта: %s" % form.errors)
         return super().form_invalid(form)
+
+    def get_form(self):
+        """Переопределение метода get_form для указания формы для модели."""
+        user = self.request.user
+        if user.is_authenticated and user.has_perm("catalog.can_unpublish_product"):
+            return ProductModeratorForm
+        return ProductForm
 
 
 class ProductDeleteView(LoginRequiredMixin, DeleteView):

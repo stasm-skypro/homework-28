@@ -110,6 +110,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Аутентификация пользователей
 AUTH_USER_MODEL = "users.CustomUser"
+
+# Редирект
 LOGIN_REDIRECT_URL = "catalog:product_list"
 LOGOUT_REDIRECT_URL = "catalog:product_list"
 
