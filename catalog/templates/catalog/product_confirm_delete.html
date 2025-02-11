@@ -17,7 +17,11 @@
                         {% csrf_token %}
                     </div>
                     <div class="btn-group">
+                        {% if perms.users.can_delete_product %}
                         <button type="submit" class="btn btn-danger">Удалить</button>
+                        {% else %}
+                        <button type="button" class="btn btn-outline-danger" disabled>Удалить</button>
+                        {% endif %}
                         <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary">Отменить</a>
                     </div>
                     <br />
