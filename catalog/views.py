@@ -59,6 +59,13 @@ class ProductListView(ListView):
     model = Product
     context_object_name = "product_list"
 
+    def get_context_data(self, **kwargs):
+        """Обработка контекста для передачи в шаблон проверки модератора продукта."""
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context["is_product_moderator"] = user.groups.filter(name="Product Moderators").exists()
+        return context
+
 
 class ProductDetailView(LoginRequiredMixin, DetailView):
     """Определяет отображение детализации (характеристик) продукта."""
