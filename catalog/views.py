@@ -16,7 +16,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from dotenv import load_dotenv
 
-from catalog.forms import CategoryForm, ProductForm, ProductModeratorForm
+from catalog.forms import CategoryForm, ProductForm
+from catalog.mixins import OwnerRequiredMixin  # Импортируем кастомный миксин для проверки владельца
 from catalog.models import Category, Product
 
 load_dotenv()
@@ -109,7 +110,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, OwnerRequiredMixin,  UpdateView):
     """Определяет отображение обновления продукта."""
 
     model = Product
@@ -139,9 +140,7 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         return form
 
 
-
-
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
     """Определяет отображение удаления продукта."""
 
     model = Product

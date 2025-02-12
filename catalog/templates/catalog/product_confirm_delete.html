@@ -1,6 +1,9 @@
 <!-- product_confirm_delete.html -->
-{% extends 'base.html' %} {% block title %} Skystore - удалить товар {% endblock %} {% block content %} {% include
-'header.html' %} {% include 'navbar.html' %}
+{% extends 'base.html' %}
+{% block title %} Skystore - удалить товар {% endblock %}
+{% block content %}
+{% include 'header.html' %}
+{% include 'navbar.html' %}
 <div class="container">
     <div class="row" style="align-items: center; justify-content: center">
         <div class="col-6">
@@ -17,10 +20,10 @@
                         {% csrf_token %}
                     </div>
                     <div class="btn-group">
-                        {% if perms.users.can_delete_product %}
+                        {% if perms.users.can_delete_product or user == product.owner %}
                         <button type="submit" class="btn btn-danger">Удалить</button>
                         {% else %}
-                        <button type="button" class="btn btn-outline-danger" disabled>Удалить</button>
+                        <button type="button" class="btn btn-outline-danger" title="Недостаточно прав" disabled>Удалить</button>
                         {% endif %}
                         <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary">Отменить</a>
                     </div>
