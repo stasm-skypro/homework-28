@@ -11,23 +11,19 @@
                 <div class="card">
                     <div class="card-body">
                         {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="{{ product.product }}" style="max-width: 400px" />
+                        <img src="{{ product.image.url }}" alt="{{ product.product }}" style="max-width: 400px"/>
                         {% else %}
-                        <img src="/media/blog/blog_default.png" alt="{{ product.product }}" style="max-width: 400px" />
+                        <img src="/media/blog/blog_default.png" alt="{{ product.product }}" style="max-width: 400px"/>
                         {% endif %}
                         <h2>{{ product.product }}</h2>
                         <h2>Удалить карточку товара?</h2>
                         {% csrf_token %}
                     </div>
                     <div class="btn-group">
-                        {% if perms.users.can_delete_product or user == product.owner %}
                         <button type="submit" class="btn btn-danger">Удалить</button>
-                        {% else %}
-                        <button type="button" class="btn btn-outline-danger" title="Недостаточно прав" disabled>Удалить</button>
-                        {% endif %}
                         <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary">Отменить</a>
                     </div>
-                    <br />
+                    <br/>
                 </div>
             </form>
         </div>

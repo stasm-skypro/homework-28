@@ -32,6 +32,15 @@ class OwnerRequiredMixin:
     def get_object(self, queryset=None):
         """Возвращает объект только если текущий пользователь — владелец."""
         obj = super().get_object(queryset)
-        if obj.owner != self.request.user:
-            raise PermissionDenied("Вы не являетесь владельцем этого продукта!")
-        return obj
+
+        # Проверяем, является ли пользователь владельцем
+        if obj.owner == self.request.user:
+            return obj
+
+        # Проверяем, состоит ли пользователь в группе "Product Moderators"
+        if self.request.user.groups.filter(name="Product Moderators").exists():
+            return obj
+
+        # Если не владелец и не модератор — запрет
+        raise PermissionDenied("Вы не можете удалить этот продукт!")
+
