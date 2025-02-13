@@ -5,6 +5,7 @@
 import logging
 
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -16,7 +17,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from dotenv import load_dotenv
 
-from catalog.forms import CategoryForm, ProductForm
+from catalog.forms import CategoryForm, ProductForm, ProductModeratorForm
 from catalog.mixins import OwnerRequiredMixin  # Импортируем кастомный миксин для проверки владельца
 from catalog.models import Category, Product
 
@@ -144,6 +145,16 @@ class ProductUpdateView(LoginRequiredMixin, OwnerRequiredMixin,  UpdateView):
         form = super().get_form(form_class)
         if not self.request.user.has_perm("catalog.can_unpublish_product"):
             form.fields["publicated"].disabled = True
+        else:
+            form.fields["product"].disabled = True
+            form.fields["category"].disabled = True
+            form.fields["price"].disabled = True
+            form.fields["description"].disabled = True
+            form.fields["image"].disabled = True
+            form.fields["created_at"].disabled = True
+            form.fields["changed_at"].disabled = True
+            form.fields["views_counter"].disabled = True
+            form.fields["publicated"].disabled = False
         return form
 
 
@@ -165,3 +176,5 @@ class ProductDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
         product = self.get_object()
         logger.info("Продукт '%s' успешно удалён." % product.product)
         return super().delete(request, *args, **kwargs)
+
+

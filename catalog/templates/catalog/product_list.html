@@ -98,6 +98,13 @@
              style="color: #c0c9d1;">Удалить</a>
           {% endif %}
         </div>
+        {% if user.is_authenticated and is_product_moderator %}
+        <div class="text-center">
+          <a href="{% url 'catalog:product_moderator_update' product.pk %}" class="p-2 btn btn-dark-link" role="button"
+             style="color: #34373a;">Установить признак публикации</a>
+        </div>
+        {% endif %}
+
         <!-- Вариант 2 -->
         <!--        <div class="btn-group">-->
         <!--          {% if user.is_authenticated %}-->
