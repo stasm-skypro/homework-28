@@ -58,6 +58,7 @@ class ProductForm(StyledFormMixin, forms.ModelForm):
     class Meta:
         model = Product
         fields = "__all__"
+        exclude = ["owner"]  # Исключаем owner, потому что поле заполняется автоматически.
         labels = {
             "name": "Название",
             "description": "Описание",
@@ -67,6 +68,7 @@ class ProductForm(StyledFormMixin, forms.ModelForm):
             "created_at": "Дата производства",
             "changed_at": "Дата последнего изменения",
             "views_counter": "Количество просмотров",
+            "publicated": "Признак публикации",
         }
 
     def clean_price(self):
@@ -126,3 +128,14 @@ class ProductForm(StyledFormMixin, forms.ModelForm):
                 break
 
         return cleaned_data
+
+
+class ProductModeratorForm(StyledFormMixin, forms.ModelForm):
+    """Класс для модерации данных о продукте."""
+
+    class Meta:
+        model = Product
+        fields = ["publicated"]
+        labels = {
+            "publicated": "Признак публикации",
+        }

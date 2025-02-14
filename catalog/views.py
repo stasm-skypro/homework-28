@@ -5,6 +5,7 @@
 import logging
 
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -16,7 +17,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from dotenv import load_dotenv
 
-from catalog.forms import CategoryForm, ProductForm
+from catalog.forms import CategoryForm, ProductForm, ProductModeratorForm
+from catalog.mixins import OwnerRequiredMixin  # Импортируем кастомный миксин для проверки владельца
 from catalog.models import Category, Product
 
 load_dotenv()
@@ -57,6 +59,13 @@ class ProductListView(ListView):
 
     model = Product
     context_object_name = "product_list"
+
+    def get_context_data(self, **kwargs):
+        """Обработка контекста для передачи в шаблон проверки модератора продукта."""
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context["is_product_moderator"] = user.groups.filter(name="Product Moderators").exists()
+        return context
 
 
 class ProductDetailView(LoginRequiredMixin, DetailView):
@@ -99,7 +108,8 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Дополнительная обработка перед сохранением формы."""
         self.object = form.save()  # Сохраняем объект формы в базу
-        logger.info("Продукт '%s' успешно создан." % self.object.product)
+        form.instance.owner = self.request.user  # Назначаем владельца
+        logger.info("Продукт '%s' успешно создан. Владелец продукта %s." % (self.object.product, self.request.user))
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -108,11 +118,10 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, OwnerRequiredMixin,  UpdateView):
     """Определяет отображение обновления продукта."""
 
     model = Product
-    # fields = "__all__"
     form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
 
@@ -127,8 +136,29 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         logger.warning("Ошибка при обновлении продукта: %s" % form.errors)
         return super().form_invalid(form)
 
+    def get_form(self, form_class=None):
+        """Определяем, какую форму использовать и блокируем поле published при необходимости."""
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+        if form_class is None:
+            form_class = ProductForm  # Всегда используем стандартную форму
+
+        form = super().get_form(form_class)
+        if not self.request.user.has_perm("catalog.can_unpublish_product"):
+            form.fields["publicated"].disabled = True
+        else:
+            form.fields["product"].disabled = True
+            form.fields["category"].disabled = True
+            form.fields["price"].disabled = True
+            form.fields["description"].disabled = True
+            form.fields["image"].disabled = True
+            form.fields["created_at"].disabled = True
+            form.fields["changed_at"].disabled = True
+            form.fields["views_counter"].disabled = True
+            form.fields["publicated"].disabled = False
+        return form
+
+
+class ProductDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
     """Определяет отображение удаления продукта."""
 
     model = Product
@@ -146,3 +176,5 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
         product = self.get_object()
         logger.info("Продукт '%s' успешно удалён." % product.product)
         return super().delete(request, *args, **kwargs)
+
+
